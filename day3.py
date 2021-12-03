@@ -36,7 +36,8 @@ data = [l for l in data]
 
 
 def bit_rates(arr):
-    if Counter(arr).most_common()[0][0] == "1":
+    res = Counter(arr).most_common()[0][0]
+    if res == "1":
         return "1", "0"
     else:
         return "0", "1"
@@ -66,21 +67,33 @@ print("Part 1:", int("".join(gamma_rate), 2) * int("".join(epsilon_rate), 2))
 
 # Part 2
 
-oxygen_rating = list(arr)
+
+def get_most(arr):
+    res = Counter(arr).most_common()
+    print(res)
+    if res[0][1] == res[1][1]:
+        return "1"
+    elif res[0][0] == "0":
+        return "0"
+    else:
+        return "1"
 
 
-while len(oxygen_rating) != 1:
-    new_oxygen_rating = []
-    step = 0
+ox_arr = arr[:]
 
-    for j in range(len(arr)):
-        for i in range(step, len(trans_arr)):
-            print(i, arr[i])
-            if arr[j][i] == gamma_rate[i]:
-                new_oxygen_rating.append([oxygen_rating[j]])
-            step += 1
-    oxygen_rating = new_oxygen_rating[:]
-    print(oxygen_rating)
+oxygen_rating = ""
 
+while len(ox_arr) > 1:
+    trans_ox_arr = np.array(ox_arr).T.tolist()
+    new_ox_arr = []
+    for i, r in enumerate(ox_arr):
+        if get_most(r) == r[i]:
+            new_ox_arr.append(r)
+
+    ox_arr = new_ox_arr[:]
+    print("ox_arr", ox_arr)
+    # oxygen_rating += get_most(r)
+
+print(ox_arr)
 print(oxygen_rating)
 
