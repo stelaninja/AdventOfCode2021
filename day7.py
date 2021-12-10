@@ -25,27 +25,44 @@ response = requests.get(
 TEST = False
 if TEST:
     data = """16,1,2,0,4,2,7,1,2,14"""
-    days = 18
 else:
     data = response.text
-    days = 80
 
 data = [int(x) for x in data.split(",")]
 
-print(data)
+# print(data)
 
 med = np.median(data)
 mean = np.mean(data)
 # print(med, med in data)
+print(mean)
 
 moves1 = []
 moves2 = []
 
 for crab in data:
     fuel1 = abs(crab - med)
-    fuel2 = abs(crab - mean)
+    # fuel2 = abs(crab - mean)
     moves1.append(fuel1)
-    moves2.append(round((fuel2 * (fuel2 + 1)) / 2))
+    # moves2.append(round((fuel2 * (fuel2 + 1)) / 2))
+
+minimum = 1e9
+position = None
+print(minimum)
+
+for i in range(int(mean) - 5, int(mean) + 5):
+    moves2 = []
+    for crab in data:
+        fuel = abs(crab - i)
+        moves2.append(round((fuel * (fuel + 1)) / 2))
+
+    res = sum(moves2)
+    # print(minimum, res)
+    if res < minimum:
+        position = i
+        minimum = res
+
+print(position)
 
 print("Part 1:", sum(moves1))
-print("Part 2:", sum(moves2))
+print("Part 2:", minimum)
