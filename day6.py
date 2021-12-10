@@ -29,18 +29,18 @@ data = [int(x) for x in data.split(",")]
 
 
 def simulate_fish(days, data):
+    fishes = [0 for i in range(9)]
+    for fish in data:
+        fishes[fish] += 1
+
     for day in range(1, days + 1):
-        new_fish = 0
-        for i, fish in enumerate(data):
-            if fish == 0:
-                data[i] = 6
-                new_fish += 1
-            else:
-                data[i] -= 1
-        if new_fish > 0:
-            data.extend([8] * new_fish)
-        # print(f"{day} days: {data}")
-    return len(data)
+
+        new_fishes = fishes[1:] + [0]
+        new_fishes[8] += fishes[0]
+        new_fishes[6] += fishes[0]
+        fishes = new_fishes
+
+    return sum(fishes)
 
 
 # print(data)
