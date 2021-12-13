@@ -39,16 +39,34 @@ data = [x for x in data.strip().split("\n")]
 opens = "([{<"
 closes = ")]}>"
 
-valids = {"]": "[", ")": "(", "}": "{", ">": "<"}
+valids = {
+    "]": "[",
+    ")": "(",
+    "}": "{",
+    ">": "<",
+    "[": "]",
+    "(": ")",
+    "{": "}",
+    "<": ">",
+}
 
 point_table = {")": 3, "]": 57, "}": 1197, ">": 25137}
 
-open_stack = []
+point_table2 = {
+    ")": 1,
+    "]": 2,
+    "}": 3,
+    ">": 4,
+}
+
 failures = []
 
+incomplete = []
+
 for line in data:
+    open_stack = []
     for c in line:
-        print(c)
+        # print(c)
         if c in opens:
             open_stack.append(c)
         elif c in closes:
@@ -56,12 +74,37 @@ for line in data:
                 open_stack.pop()
             else:
                 failures.append(c)
+                open_stack = []
                 break
         else:
             continue
+    if open_stack:
+        print(line, "\t\t", "".join(open_stack))
+        incomplete.append(open_stack)
 
 # print(open_stack)
 print("Failures:", failures)
+# print("Incomplete:", incomplete)
+incomplete_reverse = []
+
+for line in incomplete:
+    temp = ""
+    while line:
+        temp += valids[line.pop()]
+
+    incomplete_reverse.append(temp)
+    # print("".join(line))
+
+print("Incomplete:", incomplete_reverse)
+
+point2_list = []
+for line in incomplete_reverse:
+    points2 = 0
+    for c in line:
+        points2 = points2 * 5 + point_table2[c]
+        # print(c, point_table2[c], points2)
+    point2_list.append(points2)
+
 
 points = 0
 
@@ -70,3 +113,4 @@ for fail in failures:
 
 
 print("Part 1:", points)
+print("Part 2:", int(np.median(point2_list)))
